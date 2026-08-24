@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { requireAuth } from '../../middleware/auth.js';
+import * as controller from './analytics.controller.js';
+
+export const analyticsRouter = Router();
+
+analyticsRouter.use(requireAuth);
+analyticsRouter.get('/reports/:domain', controller.report);
+analyticsRouter.get('/burnout', controller.burnout);
+

@@ -1,0 +1,212 @@
+openapi: 3.0.3
+info:
+  title: LifeOS X API
+  version: 1.0.0
+  description: REST API for the LifeOS X Android app.
+servers:
+  - url: http://localhost:8080/api/v1
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT or Firebase ID token
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          type: object
+paths:
+  /auth/register:
+    post:
+      summary: Register with email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+                displayName: { type: string }
+      responses:
+        "201": { description: Created }
+  /auth/login:
+    post:
+      summary: Login with local credentials
+      security: []
+      responses:
+        "200": { description: Token bundle }
+  /auth/firebase:
+    post:
+      summary: Login or link using Firebase ID token for Google or phone auth
+      security: []
+      responses:
+        "200": { description: Token bundle }
+  /auth/guest:
+    post:
+      summary: Create a guest session
+      security: []
+      responses:
+        "201": { description: Guest token bundle }
+  /dashboard:
+    get:
+      summary: Dashboard summary with scores, streaks, finance, study, XP, challenges, and AI insights
+      responses:
+        "200": { description: Dashboard payload }
+  /ai/chat:
+    post:
+      summary: LifeOS AI chat with provider fallback
+      responses:
+        "200": { description: AI response }
+  /ai/chat/stream:
+    post:
+      summary: Server-sent event streaming chat response
+      responses:
+        "200": { description: SSE stream }
+  /ai/recommendations:
+    post:
+      summary: Generate a smart recommendation for habits, finance, study, tasks, fitness, burnout, or reports
+      responses:
+        "200": { description: Recommendation }
+  /habits:
+    get:
+      summary: List habits
+      responses:
+        "200": { description: Habit list }
+    post:
+      summary: Create a habit
+      responses:
+        "201": { description: Created habit }
+  /habit-logs:
+    get:
+      summary: List habit logs
+      responses:
+        "200": { description: Habit logs }
+    post:
+      summary: Log habit completion, miss, skip, or partial progress
+      responses:
+        "201": { description: Created log }
+  /bad-habits:
+    get:
+      summary: List recovery targets
+      responses:
+        "200": { description: Bad habit list }
+    post:
+      summary: Create a recovery target
+      responses:
+        "201": { description: Created bad habit }
+  /expenses:
+    get:
+      summary: List expenses
+      responses:
+        "200": { description: Expense list }
+    post:
+      summary: Create expense
+      responses:
+        "201": { description: Created expense }
+  /income:
+    get:
+      summary: List income
+      responses:
+        "200": { description: Income list }
+    post:
+      summary: Create income
+      responses:
+        "201": { description: Created income }
+  /study/subjects:
+    get:
+      summary: List study subjects
+      responses:
+        "200": { description: Subject list }
+    post:
+      summary: Create study subject
+      responses:
+        "201": { description: Created subject }
+  /tasks:
+    get:
+      summary: List tasks
+      responses:
+        "200": { description: Task list }
+    post:
+      summary: Create task
+      responses:
+        "201": { description: Created task }
+  /reminders:
+    get:
+      summary: List reminders
+      responses:
+        "200": { description: Reminder list }
+    post:
+      summary: Create reminder
+      responses:
+        "201": { description: Created reminder }
+  /gamification/leaderboard:
+    get:
+      summary: Public XP leaderboard
+      security: []
+      responses:
+        "200": { description: Leaderboard }
+  /gamification/daily-reward:
+    post:
+      summary: Claim daily XP reward
+      responses:
+        "200": { description: Reward state }
+  /gamification/ai-challenge:
+    post:
+      summary: Generate and save an AI challenge
+      responses:
+        "201": { description: Challenge }
+  /analytics/reports/{domain}:
+    get:
+      summary: Analytics report for habits, finance, study, productivity, or recovery
+      parameters:
+        - in: path
+          name: domain
+          required: true
+          schema: { type: string }
+      responses:
+        "200": { description: Report data }
+  /analytics/burnout:
+    get:
+      summary: Burnout risk analysis
+      responses:
+        "200": { description: Burnout score }
+  /notifications/send:
+    post:
+      summary: Send an FCM notification to active devices
+      responses:
+        "200": { description: Delivery status }
+  /account/profile:
+    get:
+      summary: Current profile
+      responses:
+        "200": { description: Profile }
+    patch:
+      summary: Update profile and consent preferences
+      responses:
+        "200": { description: Updated profile }
+  /account/export:
+    get:
+      summary: Export all account data
+      responses:
+        "200": { description: Export bundle }
+  /account/delete/request:
+    post:
+      summary: Start account deletion grace period
+      responses:
+        "200": { description: Grace period }
+  /account/delete/confirm:
+    post:
+      summary: Permanently delete MySQL and Firebase data after re-authentication
+      responses:
+        "200": { description: Deleted }
+
