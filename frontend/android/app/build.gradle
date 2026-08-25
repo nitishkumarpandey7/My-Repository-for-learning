@@ -1,0 +1,62 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
+}
+
+android {
+    namespace "com.lifeosx.app"
+    compileSdk flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    defaultConfig {
+        applicationId "com.lifeosx.app"
+        minSdkVersion flutter.minSdkVersion
+        targetSdk flutter.targetSdkVersion
+        versionCode flutter.versionCode
+        versionName flutter.versionName
+        multiDexEnabled true
+        manifestPlaceholders = [applicationName: "android.app.Application", usesCleartextTraffic: "false"]
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("LIFEOSX_KEYSTORE") ?: "debug.keystore")
+            storePassword System.getenv("LIFEOSX_KEYSTORE_PASSWORD") ?: "android"
+            keyAlias System.getenv("LIFEOSX_KEY_ALIAS") ?: "androiddebugkey"
+            keyPassword System.getenv("LIFEOSX_KEY_PASSWORD") ?: "android"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+        debug {
+            manifestPlaceholders = [applicationName: "android.app.Application", usesCleartextTraffic: "true"]
+        }
+    }
+}
+
+flutter {
+    source "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.4"
+}

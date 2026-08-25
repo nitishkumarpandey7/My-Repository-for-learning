@@ -1,0 +1,21 @@
+.dart_tool/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+.idea/
+*.iml
+.DS_Store
+coverage/
+
+# Android generated files
+android/.gradle/
+android/local.properties
+android/**/build/
+
+# iOS generated files
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
